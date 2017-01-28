@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170128164639) do
+ActiveRecord::Schema.define(version: 20170128170354) do
 
   create_table "contact_details", force: :cascade do |t|
     t.string   "email"
@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 20170128164639) do
     t.string   "postcode"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+  end
+
+  create_table "organisation_people", force: :cascade do |t|
+    t.integer  "person_id",       null: false
+    t.integer  "organisation_id", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["organisation_id", "person_id"], name: "index_organisation_people_on_organisation_id_and_person_id", unique: true
+    t.index ["organisation_id"], name: "index_organisation_people_on_organisation_id"
+    t.index ["person_id"], name: "index_organisation_people_on_person_id"
   end
 
   create_table "organisations", force: :cascade do |t|
