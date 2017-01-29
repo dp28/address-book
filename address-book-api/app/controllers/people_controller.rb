@@ -1,6 +1,10 @@
 class PeopleController < ApplicationController
   before_action :validate_params, only: [:create, :update]
-  before_action :ensure_person_exists, except: :create
+  before_action :ensure_person_exists, only: [:update, :destroy]
+
+  def index
+    render json: people.order(:name)
+  end
 
   def create
     new_person_params = person_params.merge(contact_details: create_contact_details)
@@ -27,6 +31,14 @@ class PeopleController < ApplicationController
   def person
     return @person if defined? @person
     @person = Person.find_by id: params[:id]
+  end
+
+  def people
+    if params[:matching_name].present?
+      Person.where('lower(name) LIKE lower(?)', "%#{params[:matching_name]}%")
+    else
+      Person
+    end
   end
 
   def validate_params

@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe PeopleController, type: :controller do
-  let(:result) { JSON.parse(req.body).deep_symbolize_keys }
+  let(:result) do
+    body = JSON.parse(req.body)
+    body.is_a?(Array) ? body.map(&:deep_symbolize_keys) : body.deep_symbolize_keys
+  end
 
   CONTACT_DETAILS_FIELDS = ContactDetails::USER_EDITABLE_PARAMS
 
@@ -37,26 +40,70 @@ RSpec.describe PeopleController, type: :controller do
   end
 
   shared_examples_for 'returning the Person and their ContactDetails' do
-    subject { result }
+    subject { person_result }
 
     it 'should have the specified name' do
-      expect(result[:name]).to eq person.name
+      expect(person_result[:name]).to eq person.name
     end
 
     it 'should have the id of the new Person' do
-      expect(result[:id]).to eq person.id
+      expect(person_result[:id]).to eq person.id
     end
 
     it 'should have a "contact_details" object' do
-      expect(result).to have_key :contact_details
+      expect(person_result).to have_key :contact_details
     end
 
     describe 'the "contact_details" object' do
-      subject(:contact_details_result) { result[:contact_details] }
+      subject(:contact_details_result) { person_result[:contact_details] }
 
       CONTACT_DETAILS_FIELDS.each do |field|
         it "should have the '#{field}' of the Person's ContactDetails" do
           expect(contact_details_result[field]).to eq person.contact_details.send(field)
+        end
+      end
+    end
+  end
+
+  describe 'GET index' do
+    subject(:req) { get :index, params: params }
+    let(:params)  { {} }
+
+    it { should have_http_status :ok }
+
+    context 'if there are no People' do
+      it 'should return an empty array' do
+        expect(result).to eq []
+      end
+    end
+
+    context 'if there are People' do
+      let!(:people)        { FactoryGirl.create_list :person, 2 }
+      let(:returned_names) { result.map { |person| person[:name] } }
+
+      it 'should have a result for each person' do
+        expect(result.size).to eq people.size
+      end
+
+      it 'should return the people sorted by name' do
+        expect(returned_names).to eq people.map(&:name).sort
+      end
+
+      describe 'the result for each Person' do
+        it_should_behave_like 'returning the Person and their ContactDetails' do
+          let(:person)        { people.first }
+          let(:person_result) { result.first }
+        end
+      end
+
+      describe 'when a "matching_name" param is passed' do
+        let(:params)        { { matching_name: matching_name } }
+        let(:matching_name) { 'crate' }
+
+        it 'should only return the people with names that include the provided substring' do
+          people.first.update name: 'Socrates'
+          people.second.update name: 'Joan of Arc'
+          expect(returned_names).to eq ['Socrates']
         end
       end
     end
@@ -85,7 +132,8 @@ RSpec.describe PeopleController, type: :controller do
 
       describe 'the response body' do
         it_should_behave_like 'returning the Person and their ContactDetails' do
-          let(:person) { Person.last }
+          let(:person)        { Person.last }
+          let(:person_result) { result }
         end
       end
 
@@ -163,6 +211,7 @@ RSpec.describe PeopleController, type: :controller do
 
         describe 'the response body' do
           it_should_behave_like 'returning the Person and their ContactDetails' do
+            let(:person_result) { result }
             before do
               req
               person.reload
@@ -226,6 +275,7 @@ RSpec.describe PeopleController, type: :controller do
       end
 
       describe 'the response body' do
+        let(:person_result) { result }
         it_should_behave_like 'returning the Person and their ContactDetails'
       end
     end
