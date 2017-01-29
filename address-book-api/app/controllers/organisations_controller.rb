@@ -3,7 +3,7 @@ class OrganisationsController < ApplicationController
   before_action :ensure_organisation_exists, only: [:update, :destroy]
 
   def index
-    render json: organisations.order(:name)
+    render json: organisations.order(:name).includes(:contact_details)
   end
 
   def create

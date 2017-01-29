@@ -3,7 +3,7 @@ class PeopleController < ApplicationController
   before_action :ensure_person_exists, only: [:update, :destroy]
 
   def index
-    render json: people.order(:name)
+    render json: people.order(:name).includes(:contact_details)
   end
 
   def create
