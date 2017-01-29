@@ -122,4 +122,43 @@ RSpec.describe OrganisationPeopleController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE destroy' do
+    subject(:req)         { delete :destroy, format: :json, params: params }
+    let(:params)          { { organisation_id: organisation_id, id: person_id } }
+    let(:organisation_id) { -1 }
+    let(:person_id)       { -1 }
+
+    context 'if the Organisation does not exist' do
+      it_should_behave_like 'a not found response', 'organisation'
+    end
+
+    context 'if the Organisation does exist' do
+      let(:organisation)    { FactoryGirl.create :organisation }
+      let(:organisation_id) { organisation.id }
+
+      context 'and the Person does exist' do
+        let(:person)    { FactoryGirl.create :person }
+        let(:person_id) { person.id }
+
+        context 'but is not part of the Organisation' do
+          it_should_behave_like 'a not found response', 'person'
+        end
+
+        context 'and the Person is part of the Organisation' do
+          before { organisation.people << person }
+
+          it { should have_http_status :ok }
+
+          it 'should delete a OrganisationPerson' do
+            expect { req }.to change(OrganisationPerson, :count).by(-1)
+          end
+
+          it 'should remove the Person to the Organisation' do
+            expect { req }.to change { organisation.reload.people.include? person }.to false
+          end
+        end
+      end
+    end
+  end
 end
