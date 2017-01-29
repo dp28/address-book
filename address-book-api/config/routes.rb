@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  resources :people, only: [:create, :update]
+  resources :people, only: [:create, :update, :destroy]
 end

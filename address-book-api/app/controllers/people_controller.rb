@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  before_action :validate_params
+  before_action :validate_params, only: [:create, :update]
   before_action :ensure_person_exists, except: :create
 
   def create
@@ -12,6 +12,10 @@ class PeopleController < ApplicationController
     person.update person_params
     person.contact_details.update contact_details_params
     render json: person
+  end
+
+  def destroy
+    render json: person.destroy
   end
 
   private

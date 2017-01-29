@@ -204,4 +204,30 @@ RSpec.describe PeopleController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    subject(:req)   { delete :destroy, params: { id: person_id } }
+    let(:person_id) { -1 }
+
+    context 'if there is no Person with the specified id' do
+      it_should_behave_like(
+        'an API error', message: /person found/i, key: 'not_found', status: :not_found
+      )
+    end
+
+    context 'if the Person does exist' do
+      let!(:person)   { FactoryGirl.create :person }
+      let(:person_id) { person.id }
+
+      it { should have_http_status :ok }
+
+      it 'should delete the Person' do
+        expect { req }.to change { Person.find_by(id: person_id) }.to nil
+      end
+
+      describe 'the response body' do
+        it_should_behave_like 'returning the Person and their ContactDetails'
+      end
+    end
+  end
 end
