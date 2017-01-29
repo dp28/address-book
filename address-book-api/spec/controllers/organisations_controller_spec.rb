@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PeopleController, type: :controller do
+RSpec.describe OrganisationsController, type: :controller do
   include ContactableResultSpecs
 
   describe 'GET index' do
@@ -9,27 +9,27 @@ RSpec.describe PeopleController, type: :controller do
 
     it { should have_http_status :ok }
 
-    context 'if there are no People' do
+    context 'if there are no Organisations' do
       it 'should return an empty array' do
         expect(result).to eq []
       end
     end
 
-    context 'if there are People' do
-      let!(:people)        { FactoryGirl.create_list :person, 2 }
-      let(:returned_names) { result.map { |person| person[:name] } }
+    context 'if there are Organisations' do
+      let!(:organisations) { FactoryGirl.create_list :organisation, 2 }
+      let(:returned_names) { result.map { |organisation| organisation[:name] } }
 
-      it 'should have a result for each person' do
-        expect(result.size).to eq people.size
+      it 'should have a result for each organisation' do
+        expect(result.size).to eq organisations.size
       end
 
-      it 'should return the people sorted by name' do
-        expect(returned_names).to eq people.map(&:name).sort
+      it 'should return the organisations sorted by name' do
+        expect(returned_names).to eq organisations.map(&:name).sort
       end
 
-      describe 'the result for each Person' do
+      describe 'the result for each Organisation' do
         it_should_behave_like 'returning the Contactable and their ContactDetails' do
-          let(:contactable)        { people.sort_by(&:name).first }
+          let(:contactable)        { organisations.sort_by(&:name).first }
           let(:contactable_result) { result.first }
         end
       end
@@ -38,9 +38,9 @@ RSpec.describe PeopleController, type: :controller do
         let(:params)        { { matching_name: matching_name } }
         let(:matching_name) { 'crate' }
 
-        it 'should only return the people with names that include the provided substring' do
-          people.first.update name: 'Socrates'
-          people.second.update name: 'Joan of Arc'
+        it 'should only return the organisations with names that include the provided substring' do
+          organisations.first.update name: 'Socrates'
+          organisations.second.update name: 'Joan of Arc'
           expect(returned_names).to eq ['Socrates']
         end
       end
@@ -51,17 +51,17 @@ RSpec.describe PeopleController, type: :controller do
     subject(:req) { post :create, format: :json, params: params }
     let(:params)  { {} }
 
-    it_should_behave_like 'requiring a contactable param', :person
+    it_should_behave_like 'requiring a contactable param', :organisation
 
-    context 'with a "person" parameter with a "name"' do
-      let(:params)        { { person: person_params } }
-      let(:person_params) { { name: name } }
-      let(:name)          { 'The French Army' }
+    context 'with a "organisation" parameter with a "name"' do
+      let(:params)              { { organisation: organisation_params } }
+      let(:organisation_params) { { name: name } }
+      let(:name)                { 'The French Army' }
 
       it { should have_http_status :created }
 
-      it 'should create a new Person' do
-        expect { req }.to change(Person, :count).by(1)
+      it 'should create a new Organisation' do
+        expect { req }.to change(Organisation, :count).by(1)
       end
 
       it 'should create a new ContactDetails' do
@@ -70,21 +70,21 @@ RSpec.describe PeopleController, type: :controller do
 
       describe 'the response body' do
         it_should_behave_like 'returning the Contactable and their ContactDetails' do
-          let(:contactable)        { Person.last }
+          let(:contactable)        { Organisation.last }
           let(:contactable_result) { result }
         end
       end
 
-      describe 'the new Person' do
-        subject(:person) { Person.last }
+      describe 'the new Organisation' do
+        subject(:organisation) { Organisation.last }
         before { req }
 
         it 'should have the supplied name' do
-          expect(person.name).to eq name
+          expect(organisation.name).to eq name
         end
 
         it 'should have the new ContactDetails' do
-          expect(person.contact_details).to eq ContactDetails.last
+          expect(organisation.contact_details).to eq ContactDetails.last
         end
       end
 
@@ -101,8 +101,8 @@ RSpec.describe PeopleController, type: :controller do
         end
 
         context 'if all the ContactDetails fields were passed as the "contact_details" of the ' \
-          'person' do
-          let(:person_params)          { super().merge contact_details: contact_details_params }
+          'organisation' do
+          let(:organisation_params)    { super().merge contact_details: contact_details_params }
           let(:contact_details_params) { fully_specified_contact_details_params }
 
           ContactDetails::USER_EDITABLE_PARAMS.each do |field|
@@ -116,29 +116,29 @@ RSpec.describe PeopleController, type: :controller do
   end
 
   describe 'PUT update' do
-    subject(:req)   { put :update, params: params }
-    let(:person_id) { -1 }
-    let(:params)    { { id: person_id } }
+    subject(:req)         { put :update, params: params }
+    let(:organisation_id) { -11 }
+    let(:params)          { { id: organisation_id } }
 
-    it_should_behave_like 'requiring a contactable param', :person
+    it_should_behave_like 'requiring a contactable param', :organisation
 
-    context 'with a "person" parameter with a "name"' do
-      let(:params)        { super().merge(person: person_params) }
-      let(:person_params) { { name: name } }
-      let(:name)          { 'Sigmund Freud' }
+    context 'with a "organisation" parameter with a "name"' do
+      let(:params)              { super().merge(organisation: organisation_params) }
+      let(:organisation_params) { { name: name } }
+      let(:name)                { 'Sigmund Freud' }
 
-      context 'if there is no Person with the specified id' do
-        it_should_behave_like 'a not found response', 'person'
+      context 'if there is no Organisation with the specified id' do
+        it_should_behave_like 'a not found response', 'organisation'
       end
 
-      context 'if there is a Person with the specified id' do
-        let!(:person)   { FactoryGirl.create :person }
-        let(:person_id) { person.id }
+      context 'if there is a Organisation with the specified id' do
+        let!(:organisation)   { FactoryGirl.create :organisation }
+        let(:organisation_id) { organisation.id }
 
         it { should have_http_status :ok }
 
-        it 'should not create a new Person' do
-          expect { req }.not_to change(Person, :count)
+        it 'should not create a new Organisation' do
+          expect { req }.not_to change(Organisation, :count)
         end
 
         it 'should not create a new ContactDetails' do
@@ -147,22 +147,22 @@ RSpec.describe PeopleController, type: :controller do
 
         describe 'the response body' do
           it_should_behave_like 'returning the Contactable and their ContactDetails' do
-            let(:contactable)        { person }
+            let(:contactable)        { organisation }
             let(:contactable_result) { result }
 
             before do
               req
-              person.reload
+              organisation.reload
             end
           end
         end
 
-        describe 'the stored Person' do
+        describe 'the stored Organisation' do
           it 'should have its name changed to the supplied name' do
-            expect { req }.to change { person.reload.name }.to name
+            expect { req }.to change { organisation.reload.name }.to name
           end
 
-          describe 'the Person\'s ContactDetails' do
+          describe 'the Organisation\'s ContactDetails' do
             let(:contact_details) { ContactDetails.last }
 
             context 'if no contact details were passed' do
@@ -174,14 +174,14 @@ RSpec.describe PeopleController, type: :controller do
             end
 
             context 'if all the ContactDetails fields were passed as the "contact_details" of the' \
-              ' person' do
-              let(:person_params)          { super().merge contact_details: contact_details_params }
+              ' organisation' do
+              let(:organisation_params)    { super().merge contact_details: contact_details_params }
               let(:contact_details_params) { fully_specified_contact_details_params }
 
               ContactDetails::USER_EDITABLE_PARAMS.each do |field|
                 it "should have the specified #{field} changed to the passed in value" do
                   expect { req }.to \
-                    change { person.reload.contact_details.send(field) }
+                    change { organisation.reload.contact_details.send(field) }
                     .to contact_details_params[field]
                 end
               end
@@ -193,26 +193,26 @@ RSpec.describe PeopleController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    subject(:req) { delete :destroy, params: { id: person_id } }
-    let(:person_id) { -1 }
+    subject(:req) { delete :destroy, params: { id: organisation_id } }
+    let(:organisation_id) { -1 }
 
-    context 'if there is no Person with the specified id' do
-      it_should_behave_like 'a not found response', 'person'
+    context 'if there is no Organisation with the specified id' do
+      it_should_behave_like 'a not found response', 'organisation'
     end
 
-    context 'if the Person does exist' do
-      let!(:person)   { FactoryGirl.create :person }
-      let(:person_id) { person.id }
+    context 'if the Organisation does exist' do
+      let!(:organisation)   { FactoryGirl.create :organisation }
+      let(:organisation_id) { organisation.id }
 
       it { should have_http_status :ok }
 
-      it 'should delete the Person' do
-        expect { req }.to change { Person.find_by(id: person_id) }.to nil
+      it 'should delete the Organisation' do
+        expect { req }.to change { Organisation.find_by(id: organisation_id) }.to nil
       end
 
       describe 'the response body' do
         it_should_behave_like 'returning the Contactable and their ContactDetails' do
-          let(:contactable)        { person }
+          let(:contactable)        { organisation }
           let(:contactable_result) { result }
         end
       end

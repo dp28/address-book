@@ -42,19 +42,12 @@ class PeopleController < ApplicationController
   end
 
   def validate_params
-    if params[:person].nil? || params[:person][:name].nil?
-      render_error key: 'missing_parameter', message: '"person.name" is required'
-    end
+    param_missing = params[:person].nil? || params[:person][:name].nil?
+    render_missing_parameter 'person.name' if param_missing
   end
 
   def ensure_person_exists
-    if person.nil?
-      render_error(
-        key:     'not_found',
-        status:  :not_found,
-        message: "No Person found with id #{params[:id]}"
-      )
-    end
+    render_not_found(model_class: Person) if person.nil?
   end
 
   def create_contact_details
