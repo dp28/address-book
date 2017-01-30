@@ -1,6 +1,6 @@
 export interface Person {
   name: string;
-  id: number;
+  id?: number;
   contact_details: {
     email?: string;
     phone_number?: string;

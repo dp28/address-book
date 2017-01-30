@@ -10,10 +10,26 @@ import { Person } from '../person/person.model';
 })
 export class PeopleComponent implements OnInit {
   private people$: Observable<Person[]>;
+  private newPerson: Person | null = null;
+  private added = false;
 
   constructor(private peopleApi: PeopleApiService) { }
 
   ngOnInit() {
+    this.fetchPeople();
+  }
+
+  private addNewPerson(): void {
+    this.newPerson = this.newPerson || <Person>{ name: "", contact_details: {} };
+  }
+
+  private personCreated(): void {
+    this.newPerson = null;
+    this.fetchPeople();
+    this.added = true;
+  }
+
+  private fetchPeople(): void {
     this.people$ = this.peopleApi.index();
   }
 

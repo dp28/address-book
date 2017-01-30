@@ -15,6 +15,10 @@ export class PeopleApiService {
     return this.api.index(PERSON_ROUTE);
   }
 
+  create(person: Person): Observable<Person> {
+    return this.api.create(PERSON_ROUTE, PERSON_PARAM_NAME, person);
+  }
+
   update(person: Person): Observable<Person> {
     return this.api.update([PERSON_ROUTE, String(person.id)], PERSON_PARAM_NAME, person);
   }

@@ -1,5 +1,11 @@
 <h1>People</h1>
+<ngb-alert type="success" *ngIf="added" (close)="added = false">Person added successfully</ngb-alert>
+<button type="button" (click)="addNewPerson()" class="btn btn-primary">Add</button>
 <ul class="list-group">
+  <li *ngIf="newPerson">
+    <person [person]="newPerson" (created)="personCreated()"></person>
+  </li>
+
   <li *ngFor="let person of people$ | async" class="list-group-item">
     <person [person]="person"></person>
   </li>
