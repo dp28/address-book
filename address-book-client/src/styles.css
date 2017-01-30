@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  height: calc(100% - 54px);
+  overflow: hidden;
+}
+
+html, .container, .full-height {
+  height: 100%;
+}
+
+.scrollable {
+  overflow-y: auto;
+  position: absolute;
+}
+
+.header-col {
+  height: 55px;
+}
+
+.header-col h1 {
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.header-col ul {
+  overflow-y: auto;
+}
+
+.header-col .btn {
+  margin-bottom: .5rem;
+}
+
+.content-col {
+  height: calc(100% - 55px)
+}

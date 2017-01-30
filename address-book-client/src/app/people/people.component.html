@@ -1,12 +1,21 @@
-<h1>People</h1>
-<ngb-alert type="success" *ngIf="added" (close)="added = false">Person added successfully</ngb-alert>
-<button type="button" (click)="addNewPerson()" class="btn btn-primary">Add</button>
-<ul class="list-group">
-  <li *ngIf="newPerson">
-    <person [person]="newPerson" (created)="personCreated()"></person>
-  </li>
+<div class="col-sm-12 header-col">
+  <h1>People</h1>
+  <ngb-alert type="success" *ngIf="added" (close)="added = false">Person added successfully</ngb-alert>
+  <button type="button" (click)="addNewPerson()" class="btn btn-primary">Add</button>
+</div>
 
-  <li *ngFor="let person of people$ | async" class="list-group-item">
-    <person [person]="person"></person>
-  </li>
-</ul>
+<div class="col-sm-12 scrollable content-col">
+  <ul class="list-group">
+    <li *ngIf="newPerson">
+      <person [person]="newPerson" (created)="personCreated()"></person>
+    </li>
+
+    <li
+      *ngFor="let person of people$ | async ; let i = index"
+      class="list-group-item"
+      [ngClass]="{ 'bg-faded': i % 2 === 0 }"
+    >
+      <person [person]="person"></person>
+    </li>
+  </ul>
+</div>
