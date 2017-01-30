@@ -9,14 +9,19 @@ import 'rxjs/Rx';
 import { AppComponent } from './app.component';
 import { PeopleComponent } from './people/people.component';
 import { PeopleApiService } from './people-api.service';
+import { OrganisationApiService } from './organisation-api.service';
 import { ApiService } from './api.service';
 import { PersonComponent } from './person/person.component';
+import { OrganisationComponent } from './organisation/organisation.component';
+import { OrganisationsComponent } from './organisations/organisations.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PeopleComponent,
-    PersonComponent
+    PersonComponent,
+    OrganisationComponent,
+    OrganisationsComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +30,7 @@ import { PersonComponent } from './person/person.component';
     AppRoutingModule,
     NgbModule.forRoot()
   ],
-  providers: [ApiService, PeopleApiService],
+  providers: [ApiService, PeopleApiService, OrganisationApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

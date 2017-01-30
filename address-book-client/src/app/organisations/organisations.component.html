@@ -1,0 +1,12 @@
+<h1>Organisations</h1>
+<ngb-alert type="success" *ngIf="added" (close)="added = false">Organisation added successfully</ngb-alert>
+<button type="button" (click)="addNewOrgainsation()" class="btn btn-primary">Add</button>
+<ul class="list-group">
+  <li *ngIf="newOrgainsation">
+    <organisation [organisation]="newOrgainsation" (created)="organisationCreated()"></organisation>
+  </li>
+
+  <li *ngFor="let organisation of organisations$ | async" class="list-group-item">
+    <organisation [organisation]="organisation"></organisation>
+  </li>
+</ul>

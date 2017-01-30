@@ -1,0 +1,128 @@
+<ngb-alert type="success" *ngIf="updated" (close)="updated = false">Changes saved successfully</ngb-alert>
+<ngb-alert type="danger" *ngIf="!organisation.name.length" dismissable="">"name" is required</ngb-alert>
+
+<form>
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_name" class="col-sm-3 col-form-label">Name</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_name"
+        type="text"
+        [(ngModel)]="organisation.name"
+        name="name"
+        class="form-control"
+        required
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_email" class="col-sm-3 col-form-label">Email</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_email"
+        type="email"
+        [(ngModel)]="organisation.contact_details.email"
+        name="email"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_phone" class="col-sm-3 col-form-label">Phone</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_phone"
+        type="tel"
+        [(ngModel)]="organisation.contact_details.phone_number"
+        name="phone"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_address" class="col-sm-3 col-form-label">Address</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_address"
+        type="text"
+        [(ngModel)]="organisation.contact_details.street_address"
+        name="street_address"
+        class="form-control"
+      />
+      <input
+        type="text"
+        [(ngModel)]="organisation.contact_details.additional_street_address"
+        name="additional_street_address"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_city" class="col-sm-3 col-form-label">City</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_city"
+        type="text"
+        [(ngModel)]="organisation.contact_details.city"
+        name="city"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_county" class="col-sm-3 col-form-label">County</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_county"
+        type="text"
+        [(ngModel)]="organisation.contact_details.county"
+        name="county"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_country" class="col-sm-3 col-form-label">Country</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_country"
+        type="text"
+        [(ngModel)]="organisation.contact_details.country"
+        name="country"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="organisation_{{organisation.id}}_postcode" class="col-sm-3 col-form-label">Post code</label>
+    <div class="col-sm-9">
+      <input
+        id="organisation_{{organisation.id}}_postcode"
+        type="text"
+        [(ngModel)]="organisation.contact_details.postcode"
+        name="postcode"
+        class="form-control"
+      />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="offset-sm-3 col-sm-9" *ngIf="isPersisted">
+      <button type="submit" class="btn btn-primary" (click)="saveChanges($event)" [disabled]="!organisation.name.length">
+        Save changes
+      </button>
+    </div>
+    <div class="offset-sm-3 col-sm-9" *ngIf="!isPersisted">
+      <button type="submit" class="btn btn-primary" (click)="create($event)" [disabled]="!organisation.name.length">
+        Create
+      </button>
+    </div>
+  </div>
+</form>
