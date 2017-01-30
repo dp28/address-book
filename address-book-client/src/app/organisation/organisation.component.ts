@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { OrganisationApiService } from '../organisation-api.service';
 import { Organisation } from './organisation.model';
 import { Person } from '../person/person.model';
@@ -8,14 +8,24 @@ import { Person } from '../person/person.model';
   templateUrl: './organisation.component.html',
   styleUrls: ['./organisation.component.css']
 })
-export class OrganisationComponent {
+export class OrganisationComponent implements OnInit {
   @Input() private organisation: Organisation;
+  @Input() private isSelected: boolean = false;
   @Output() created = new EventEmitter();
   @Output() destroyed = new EventEmitter();
+  @Output() onSelect = new EventEmitter<Organisation>();
   private people: Person[] | null = null;
   private updated = false;
 
   constructor(private organisationApi: OrganisationApiService) { }
+
+  ngOnInit() {
+    this.organisationApi.personAddition$.subscribe(({ person, organisation }) => {
+      if (this.organisation.id === organisation.id && this.people) {
+        this.people.push(person);
+      }
+    });
+  }
 
   private get isPersisted(): boolean {
     return Boolean(this.organisation.id);
@@ -59,6 +69,11 @@ export class OrganisationComponent {
   private showPerson(person, event): void {
     event.preventDefault();
     document.getElementById(`person_${person.id}`).scrollIntoView();
+  }
+
+  private select(event): void {
+    event.preventDefault();
+    this.onSelect.emit(this.organisation);
   }
 
 }

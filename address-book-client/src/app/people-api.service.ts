@@ -16,7 +16,7 @@ export class PeopleApiService {
   }
 
   create(person: Person): Observable<Person> {
-    return this.api.create(PERSON_ROUTE, PERSON_PARAM_NAME, person);
+    return this.api.create([PERSON_ROUTE], PERSON_PARAM_NAME, person);
   }
 
   update(person: Person): Observable<Person> {

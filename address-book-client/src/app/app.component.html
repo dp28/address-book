@@ -4,10 +4,10 @@
 <div class="container">
   <div class="row full-height">
     <div class="col-sm-6 full-height">
-      <organisations></organisations>
+      <organisations (onOrganisationSelected)="selectOrganisation($event)"></organisations>
     </div>
     <div class="col-sm-6 full-height">
-      <people></people>
+      <people [selectedOrganisation]="selectedOrganisation"></people>
     </div>
   </div>
 </div>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PeopleApiService } from '../people-api.service';
 import { Person } from '../person/person.model';
+import { Organisation } from '../organisation/organisation.model';
 
 @Component({
   selector: 'people',
@@ -9,6 +10,7 @@ import { Person } from '../person/person.model';
   styleUrls: ['./people.component.css']
 })
 export class PeopleComponent implements OnInit {
+  @Input() private selectedOrganisation: Organisation;
   private people$: Observable<Person[]>;
   private newPerson: Person | null = null;
   private added = false;

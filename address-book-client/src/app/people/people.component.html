@@ -16,7 +16,12 @@
       [ngClass]="{ 'bg-faded': i % 2 === 0 }"
       id="person_{{person.id}}"
     >
-      <person [person]="person" (destroyed)="fetchPeople()"></person>
+      <person
+        [person]="person"
+        [selectedOrganisation]="selectedOrganisation"
+        (destroyed)="fetchPeople()"
+      >
+      </person>
     </li>
   </ul>
 </div>

@@ -118,6 +118,14 @@
       <button type="submit" class="btn btn-primary" (click)="saveChanges($event)" [disabled]="!organisation.name.length">
         Save changes
       </button>
+      <button
+        type="button"
+        class="btn btn-default"
+        (click)="select($event)"
+        [disabled]="isSelected"
+      >
+        Add people
+      </button>
       <button type="button" class="btn btn-danger" (click)="destroy($event)">
         Delete
       </button>

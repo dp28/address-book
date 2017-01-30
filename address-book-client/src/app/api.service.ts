@@ -21,8 +21,8 @@ export class ApiService {
     return asJson(this.http.get(urlTo(...pathParts)));
   }
 
-  create<T>(path: string, entityName: string, entity: T): Observable<T> {
-    return asJson(this.http.post(urlTo(path), { [entityName]: entity }));
+  create<T>(pathParts: string[], entityName: string, entity: T): Observable<T> {
+    return asJson(this.http.post(urlTo(...pathParts), { [entityName]: entity }));
   }
 
   update<T>(pathParts: string[], entityName: string, entity: T): Observable<T> {

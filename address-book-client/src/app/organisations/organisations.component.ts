@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrganisationApiService } from '../organisation-api.service';
 import { Organisation } from '../organisation/organisation.model';
@@ -9,8 +9,10 @@ import { Organisation } from '../organisation/organisation.model';
   styleUrls: ['./organisations.component.css']
 })
 export class OrganisationsComponent implements OnInit {
+  @Output() onOrganisationSelected = new EventEmitter<Organisation>();
   private organisations$: Observable<Organisation[]>;
   private newOrganisation: Organisation | null = null;
+  private selectedOrganisation: Organisation;
   private added = false;
 
   constructor(private organisationApi: OrganisationApiService) { }
@@ -31,6 +33,11 @@ export class OrganisationsComponent implements OnInit {
 
   private fetchOrganisations(): void {
     this.organisations$ = this.organisationApi.index();
+  }
+
+  private selectOrganisation(organisation: Organisation): void {
+    this.selectedOrganisation = organisation;
+    this.onOrganisationSelected.emit(organisation);
   }
 
 }

@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PeopleApiService } from '../people-api.service';
+import { OrganisationApiService } from '../organisation-api.service';
 import { Person } from './person.model';
+import { Organisation } from '../organisation/organisation.model';
 
 @Component({
   selector: 'person',
@@ -9,11 +11,16 @@ import { Person } from './person.model';
 })
 export class PersonComponent {
   @Input() private person: Person;
+  @Input() private selectedOrganisation: Organisation;
   @Output() created = new EventEmitter();
   @Output() destroyed = new EventEmitter();
   private updated = false;
+  private added = false;
 
-  constructor(private peopleApi: PeopleApiService) { }
+  constructor(
+    private peopleApi: PeopleApiService,
+    private organisationApi: OrganisationApiService
+  ) { }
 
   private get isPersisted(): boolean {
     return Boolean(this.person.id);
@@ -40,6 +47,13 @@ export class PersonComponent {
     this.peopleApi.destroy(this.person).subscribe(() => {
       this.destroyed.emit(this.person);
     });
+  }
+
+  private addToSelectedOrganisation(): void {
+    this
+      .organisationApi
+      .addPersonToOrganisation(this.person, this.selectedOrganisation)
+      .subscribe(() => this.added = true);
   }
 
 }
