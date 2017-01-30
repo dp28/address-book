@@ -15,7 +15,7 @@
       class="list-group-item"
       [ngClass]="{ 'bg-faded': i % 2 === 0 }"
     >
-      <organisation [organisation]="organisation"></organisation>
+      <organisation [organisation]="organisation" (destroyed)="fetchOrganisations()"></organisation>
     </li>
   </ul>
 </div>

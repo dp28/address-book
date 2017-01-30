@@ -10,6 +10,7 @@ import { Person } from './person.model';
 export class PersonComponent {
   @Input() private person: Person;
   @Output() created = new EventEmitter();
+  @Output() destroyed = new EventEmitter();
   private updated = false;
 
   constructor(private peopleApi: PeopleApiService) { }
@@ -31,6 +32,13 @@ export class PersonComponent {
     this.peopleApi.create(this.person).subscribe(person => {
       this.person = person;
       this.created.emit(person);
+    });
+  }
+
+  private destroy(event): void {
+    event.preventDefault();
+    this.peopleApi.destroy(this.person).subscribe(() => {
+      this.destroyed.emit(this.person);
     });
   }
 

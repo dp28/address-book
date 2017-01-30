@@ -10,6 +10,7 @@ import { Organisation } from './organisation.model';
 export class OrganisationComponent {
   @Input() private organisation: Organisation;
   @Output() created = new EventEmitter();
+  @Output() destroyed = new EventEmitter();
   private updated = false;
 
   constructor(private organisationApi: OrganisationApiService) { }
@@ -31,6 +32,13 @@ export class OrganisationComponent {
     this.organisationApi.create(this.organisation).subscribe(organisation => {
       this.organisation = organisation;
       this.created.emit(organisation);
+    });
+  }
+
+  private destroy(event): void {
+    event.preventDefault();
+    this.organisationApi.destroy(this.organisation).subscribe(() => {
+      this.destroyed.emit(this.organisation);
     });
   }
 

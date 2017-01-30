@@ -29,4 +29,8 @@ export class ApiService {
     return asJson(this.http.put(urlTo(...pathParts), { [entityName]: entity }));
   }
 
+  destroy<T>(pathParts: string[]): Observable<T> {
+    return asJson(this.http.delete(urlTo(...pathParts)))
+  }
+
 }

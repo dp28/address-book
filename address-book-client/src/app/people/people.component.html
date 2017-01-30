@@ -15,7 +15,7 @@
       class="list-group-item"
       [ngClass]="{ 'bg-faded': i % 2 === 0 }"
     >
-      <person [person]="person"></person>
+      <person [person]="person" (destroyed)="fetchPeople()"></person>
     </li>
   </ul>
 </div>

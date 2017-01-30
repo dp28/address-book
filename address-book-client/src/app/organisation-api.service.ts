@@ -26,4 +26,8 @@ export class OrganisationApiService {
       organisation
      );
   }
+
+  destroy(organisation: Organisation): Observable<Organisation> {
+    return this.api.destroy([ORGANISATION_ROUTE, String(organisation.id)]);
+  }
 }

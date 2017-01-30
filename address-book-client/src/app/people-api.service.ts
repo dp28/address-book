@@ -22,4 +22,8 @@ export class PeopleApiService {
   update(person: Person): Observable<Person> {
     return this.api.update([PERSON_ROUTE, String(person.id)], PERSON_PARAM_NAME, person);
   }
+
+  destroy(person: Person): Observable<Person> {
+    return this.api.destroy([PERSON_ROUTE, String(person.id)]);
+  }
 }
