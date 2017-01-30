@@ -135,7 +135,7 @@
 <ul class="list-group" *ngIf="people">
   <li class="list-group-item" *ngFor="let person of people">
     <button class="btn btn-sm btn-danger" (click)="removePerson(person)">X</button>
-    {{person.name}}
+    <a href="#" (click)="showPerson(person, $event)">{{person.name}}</a>
   </li>
 </ul>
 <div *ngIf="isEmpty">

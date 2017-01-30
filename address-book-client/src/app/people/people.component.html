@@ -14,6 +14,7 @@
       *ngFor="let person of people$ | async ; let i = index"
       class="list-group-item"
       [ngClass]="{ 'bg-faded': i % 2 === 0 }"
+      id="person_{{person.id}}"
     >
       <person [person]="person" (destroyed)="fetchPeople()"></person>
     </li>

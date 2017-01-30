@@ -56,4 +56,9 @@ export class OrganisationComponent {
     return this.people && this.people.length === 0;
   }
 
+  private showPerson(person, event): void {
+    event.preventDefault();
+    document.getElementById(`person_${person.id}`).scrollIntoView();
+  }
+
 }
