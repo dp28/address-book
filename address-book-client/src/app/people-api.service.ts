@@ -4,6 +4,7 @@ import { ApiService } from './api.service';
 import { Person } from './person/person.model';
 
 const PERSON_ROUTE = 'people';
+const PERSON_PARAM_NAME = 'person';
 
 @Injectable()
 export class PeopleApiService {
@@ -12,5 +13,9 @@ export class PeopleApiService {
 
   index(): Observable<Person[]> {
     return this.api.index(PERSON_ROUTE);
+  }
+
+  update(person: Person): Observable<Person> {
+    return this.api.update([PERSON_ROUTE, String(person.id)], PERSON_PARAM_NAME, person);
   }
 }

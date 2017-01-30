@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 
 const API_ROOT = 'http://localhost:3000/';
@@ -8,13 +8,21 @@ function urlTo(...pathParts: string[]): string {
   return `${API_ROOT}${pathParts.join('/')}`;
 }
 
+function asJson<T>(observableResponse: Observable<Response>): Observable<T> {
+  return observableResponse.map(response => response.json());
+}
+
 @Injectable()
 export class ApiService {
 
   constructor(private http: Http) { }
 
-  index<T>(entity: string): Observable<T[]> {
-    return this.http.get(urlTo(entity)).map(response => response.json());
+  index<T>(path: string): Observable<T[]> {
+    return asJson(this.http.get(urlTo(path)));
+  }
+
+  update<T>(pathParts: string[], entityName: string, entity: T): Observable<T> {
+    return asJson(this.http.put(urlTo(...pathParts), { [entityName]: entity }));
   }
 
 }
