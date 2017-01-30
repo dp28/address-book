@@ -4,12 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import 'rxjs/Rx';
 
 import { AppComponent } from './app.component';
+import { PeopleComponent } from './people/people.component';
+import { PeopleApiService } from './people-api.service';
+import { ApiService } from './api.service';
+import { PersonComponent } from './person/person.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PeopleComponent,
+    PersonComponent
   ],
   imports: [
     BrowserModule,
@@ -18,7 +25,7 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     NgbModule.forRoot()
   ],
-  providers: [],
+  providers: [ApiService, PeopleApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

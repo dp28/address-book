@@ -1,0 +1,6 @@
+<h1>People</h1>
+<ul class="list-group">
+  <li *ngFor="let person of people$ | async" class="list-group-item">
+    <person [person]="person"></person>
+  </li>
+</ul>
