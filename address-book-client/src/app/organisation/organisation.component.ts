@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { OrganisationApiService } from '../organisation-api.service';
 import { Organisation } from './organisation.model';
+import { Person } from '../person/person.model';
 
 @Component({
   selector: 'organisation',
@@ -11,6 +12,7 @@ export class OrganisationComponent {
   @Input() private organisation: Organisation;
   @Output() created = new EventEmitter();
   @Output() destroyed = new EventEmitter();
+  private people: Person[] | null = null;
   private updated = false;
 
   constructor(private organisationApi: OrganisationApiService) { }
@@ -40,6 +42,18 @@ export class OrganisationComponent {
     this.organisationApi.destroy(this.organisation).subscribe(() => {
       this.destroyed.emit(this.organisation);
     });
+  }
+
+  private fetchPeople(): void {
+    this.organisationApi.getPeople(this.organisation).subscribe(people => this.people = people);
+  }
+
+  private removePerson(person: Person): void {
+    this.organisationApi.removePerson(this.organisation, person).subscribe(() => this.fetchPeople());
+  }
+
+  private get isEmpty(): boolean {
+    return this.people && this.people.length === 0;
   }
 
 }

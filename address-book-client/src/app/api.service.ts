@@ -17,8 +17,8 @@ export class ApiService {
 
   constructor(private http: Http) { }
 
-  index<T>(path: string): Observable<T[]> {
-    return asJson(this.http.get(urlTo(path)));
+  index<T>(...pathParts: string[]): Observable<T[]> {
+    return asJson(this.http.get(urlTo(...pathParts)));
   }
 
   create<T>(path: string, entityName: string, entity: T): Observable<T> {

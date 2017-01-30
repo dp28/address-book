@@ -129,3 +129,15 @@
     </div>
   </div>
 </form>
+
+<h2>People</h2>
+<button type="button" (click)="fetchPeople()" *ngIf="!people">Show</button>
+<ul class="list-group" *ngIf="people">
+  <li class="list-group-item" *ngFor="let person of people">
+    <button class="btn btn-sm btn-danger" (click)="removePerson(person)">X</button>
+    {{person.name}}
+  </li>
+</ul>
+<div *ngIf="isEmpty">
+  This organisation does not yet contain any people.
+</div>
